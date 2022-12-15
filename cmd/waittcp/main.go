@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"crg.eti.br/go/config"
 	"crg.eti.br/go/waitTCP"
 )
 
 type configData struct {
-	Timeout int    `cfg:"timeout" cfgDefault:"1"`
-	Host    string `cfg:"host"`
+	Timeout time.Duration `cfg:"timeout" cfgDefault:"1"`
+	Host    string        `cfg:"host"`
 }
 
 func main() {
