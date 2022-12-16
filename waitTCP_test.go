@@ -38,21 +38,14 @@ func simpleServer() {
 }
 
 func TestCheck(t *testing.T) {
-	timeout, err := Check(":9999", time.Duration(1)*time.Second)
-	if err != nil {
-		t.Fatal(err)
-	}
+	timeout := Check(":9999", time.Duration(1)*time.Second)
 	if !timeout {
 		t.Fatal("Expected timeout true")
 	}
 	go simpleServer()
 	<-time.After(time.Duration(1) * time.Second)
-	timeout, err = Check(":9999", time.Duration(1)*time.Second)
-	if err != nil {
-		t.Fatal(err)
-	}
+	timeout = Check(":9999", time.Duration(1)*time.Second)
 	if timeout {
 		t.Fatal("Expected timeout false")
 	}
-
 }

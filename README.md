@@ -1,3 +1,3 @@
 # waitTCP
 
-Wait container is accepting TCP connections.
+Wait for TCP connections.

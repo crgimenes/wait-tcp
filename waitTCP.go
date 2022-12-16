@@ -6,22 +6,39 @@ import (
 )
 
 // Check if tcp port is open
-func Check(host string, timeout time.Duration) (ret bool, err error) {
+func Check(host string, timeout time.Duration) bool {
+	var (
+		conn  net.Conn
+		start = time.Now()
+	)
 	for {
-		var timeout time.Duration
-		if timeout == 0 {
-			timeout = time.Duration(1) * time.Second
-		}
-		var conn net.Conn
-		conn, err = net.DialTimeout("tcp", host, timeout)
-		if err != nil {
-			ret = true
-			err = nil
-			return
-		}
+		conn, _ = net.DialTimeout("tcp", host, 100*time.Millisecond)
 		if conn != nil {
-			err = conn.Close()
-			return
+			_ = conn.Close()
+			return false
+		}
+
+		if time.Since(start) > timeout {
+			return true
+		}
+	}
+}
+
+// CheckAndConnect if tcp port is open and connect to it
+func CheckAndConnect(host string, timeout time.Duration) (net.Conn, error) {
+	var (
+		conn  net.Conn
+		start = time.Now()
+		err   error
+	)
+	for {
+		conn, err = net.DialTimeout("tcp", host, 100*time.Millisecond)
+		if conn != nil {
+			return conn, nil
+		}
+
+		if time.Since(start) > timeout {
+			return nil, err
 		}
 	}
 }
